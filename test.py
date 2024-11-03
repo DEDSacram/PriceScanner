@@ -9,30 +9,32 @@ driver = uc.Chrome(headless=False,use_subprocess=False)
 # driver.get('https://abrahamjuliot.github.io/creepjs/')
 # driver.save_screenshot('nowsecure.png')
 #https://skinport.com/rust/market?sort=percent&order=desc
-driver.get('https://skinport.com/rust/market?sort=percent&order=desc&pricegt=85')
+#https://skinport.com/rust/market?sort=percent&order=desc&pricegt=85
+driver.get('https://skinport.com/rust/market?sort=percent&order=desc')
 
 
 
     # results_container = WebDriverWait(driver, timeout=3).until(
     #     EC.presence_of_element_located((By.ID, "rso"))
 
-wait2 = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME,"ItemPreview-content")))
-wait = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME,"CatalogPage-items")))
+wait2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME,"ItemPreview-content")))
+wait = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CLASS_NAME,"CatalogPage-items")))
 
 # items = driver.find_elements(By.CLASS_NAME, "ItemPreview-content")
 #driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 i = 0
 # print(wait.children)
 with open("test.txt", "w") as myfile:
-    for items in wait.children("div", recursive=True):
+    for items in wait.children():
         for item in items.children():
             #print(item.tag_name)
-            for grandchild in item.children(recursive=True):
+
+            # Write code to skip first it has no content
+            for grandchild in item.children():
+                 i+=1
+                 myfile.write( f"{i} \n")
             #    print("\t\t", grandchild.tag_name, "\n\t\t\t", grandchild.text)
-                myfile.write(grandchild.text)
-        i += 1
-        if i == 5:
-            break
+                 myfile.write(grandchild.text)
 
 
 
