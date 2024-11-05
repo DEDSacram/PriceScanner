@@ -1,9 +1,13 @@
-import undetected_chromedriver as uc
 import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-driver = uc.Chrome(headless=False,use_subprocess=False)
+
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.remote.webdriver import By
+import selenium.webdriver.support.expected_conditions as EC  # noqa
+from selenium.webdriver.support.wait import WebDriverWait
+
+
+import undetected_chromedriver as uc
+driver = uc.Chrome(headless=False)
 #driver.get('https://www.browserscan.net/bot-detection')
 
 # driver.get('https://abrahamjuliot.github.io/creepjs/')
@@ -33,8 +37,12 @@ with open("test.txt", "w") as myfile:
             for grandchild in item.children():
                  i+=1
                  myfile.write( f"{i} \n")
-            #    print("\t\t", grandchild.tag_name, "\n\t\t\t", grandchild.text)
-                 myfile.write(grandchild.text)
+                 #print("\t\t", grandchild.tag_name, "\n\t\t\t", grandchild.text)
+                 try:
+                    myfile.write(grandchild.text)
+                 except:
+                     print(i)
+                
 
 
 
