@@ -7,13 +7,27 @@ import json
 #     "tradable": 0
 # }).json()
 
-
+filtered = []
 
 with open('data.json', 'r') as f:
     r = json.load(f)
 
-filtered = [item for item in r if item.get('suggested_price', 0) < item.get('min_price', float('inf'))]
+for item in r:
+    suggested_price = item.get("suggested_price") or 0
+    min_price = item.get("min_price") or 0
 
+    if suggested_price > min_price:
+        item["suggested_price"] = suggested_price
+        item["min_price"] = min_price
+        item["diff"] = suggested_price - min_price
+        #print(item["market_hash_name"])
+        #print(f"suggested: {suggested_price}")
+        #print(f"min: {min_price}")
+        #print(f"diff: {suggested_price - min_price:.2f}")
+        #print("")
+        filtered.append(item)
 
-with open('test.json', 'w') as f:
-    json.dump(r, filtered)
+filtered.sort(key=lambda x: x["suggested_price"] - x["min_price"], reverse=True)
+
+with open('filtered.json', 'w') as f:
+    json.dump(filtered, f)
